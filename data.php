@@ -1,5 +1,8 @@
 <?php
 
+define('HOUR', '3600');
+define('MINUTE', '60');
+
 $is_auth = rand(0, 1);
 
 $user_name = 'Антон';
@@ -15,7 +18,7 @@ $lots = [
         'category' => 'Доски и лыжи',
         'price' => 10999,
         'path' => 'img/lot-1.jpg',
-        'expiration' => '2021-10-25 15:20'
+        'expiration' => '2021-10-26 21:17'
     ],
 
     [
@@ -23,7 +26,7 @@ $lots = [
         'category' => 'Доски и лыжи',
         'price' => 159999,
         'path' => 'img/lot-2.jpg',
-        'expiration' => '2021-10-26'
+        'expiration' => '2021-11-01'
     ],
 
     [

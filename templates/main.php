@@ -27,11 +27,11 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=is_format_price(htmlspecialchars($lots_val['price']));?></span>
+                            <span class="lot__cost"><?=format_price(htmlspecialchars($lots_val['price']));?></span>
                         </div>
-                        <?php $warningDate = (is_format_date(htmlspecialchars($lots_val['expiration'])) < 1) ? 'timer--finishing' : ''; ?> 
-                        <div class="lot__timer timer <?=htmlspecialchars($warningDate);?>">
-                            <?=is_format_date(htmlspecialchars($lots_val['expiration']));?>
+                        <?php $warningDate = get_time_left($lots_val['expiration']);?>
+                        <div class="lot__timer timer <?=htmlspecialchars(($warningDate['hours'] < 1) ? 'timer--finishing' : '');?>">
+                            <?=decorate_time(htmlspecialchars($lots_val['expiration']));?>
                         </div>
                     </div>
                 </div>

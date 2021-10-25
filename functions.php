@@ -1,5 +1,6 @@
 <?php 
 
+require_once("data.php");
 require_once("helpers.php");
 
 /**
@@ -10,7 +11,7 @@ require_once("helpers.php");
  * @return @output Сумма в виде числа с добавленным к нему знаком рубля
  */
 
-function is_format_price ($input) {
+function format_price ($input) {
     $output = "";
     $input = ceil($input);
 
@@ -26,57 +27,71 @@ function is_format_price ($input) {
 }
 
 /**
- * 'Форматирует время оставшееся до окончания лота'
+ * 'Определяет время оставшееся до окончания лота'
  *
  * @param $input Дата в виде строки
  *
  * @return @output Время в виде массива
  */
 
-function is_format_date ($input) {
-
-    $hour = 3600;
-    $minute = 60;
+function get_time_left ($input) {
 
     $date01 = strtotime($input);
     $date02 = strtotime('now');
 
     $diff = $date01 - $date02;
 
-    $hours = floor($diff / $hour);
+    $hours = floor($diff / HOUR);
 
-    $expiration = $diff - ($hours * $hour);
-    $minutes = ceil($expiration / $minute);
+    $expiration = $diff - ($hours * HOUR);
+    $minutes = ceil($expiration / MINUTE);
 
-    if ($minutes > $minute || $minutes < $minute )  {
+    $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
+    $minutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
+    
+    if ($minutes > MINUTE || $minutes < MINUTE )  {
 
-        $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
-        $minutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
+        $output = [
+
+            'hours' => $hours,
+            'minutes' => $minutes
+    
+        ];
 
     }
 
     else {
 
-        $hours = str_pad(1, 2, '0', STR_PAD_LEFT);
-        $minutes = str_pad(0, 2, '0', STR_PAD_LEFT);
+        $output = [
 
-    }
+            'hours' => '01',
+            'minutes' => '00'
     
-    if ($date02 >= $date01) {
+        ];
 
-        $hours =  str_pad(0, 2, '0', STR_PAD_LEFT);
-        $minutes =  str_pad(0, 2, '0', STR_PAD_LEFT);
-        
     }
 
-    $output = [
+   return $output;
+}
 
-        'hours' => $hours,
-        'minutes' => $minutes
+/**
+ * 'Форматирует время, оставшееся до конца лота'
+ *
+ * @param $input Время в виде строки
+ *
+ * @return @output Время в формате 'ЧЧ':'ММ'
+ */
 
-    ];
+function decorate_time ($input) {
 
-    return $output['hours'] . ':' . $output['minutes'];
+    $time = get_time_left ($input);
+
+    $hours = $time['hours'];
+    $minutes = $time['minutes'];
+
+   
+
+    return $output = $hours . ':' . $minutes;
 }
 
 ?>
