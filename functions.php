@@ -46,32 +46,25 @@ function get_time_left ($input) {
     $expiration = $diff - ($hours * HOUR);
     $minutes = ceil($expiration / MINUTE);
 
+    if ($minutes == MINUTE)  {
+
+        $hours = $hours + 1;
+        $minutes = $minutes - $minutes;
+    
+    }
+    
     $hours = str_pad($hours, 2, '0', STR_PAD_LEFT);
     $minutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
     
-    if ($minutes > MINUTE || $minutes < MINUTE )  {
+    $output = [
+        
+        'hours' => $hours,
+        'minutes' => $minutes
 
-        $output = [
+    ];
 
-            'hours' => $hours,
-            'minutes' => $minutes
+    return $output;
     
-        ];
-
-    }
-
-    else {
-
-        $output = [
-
-            'hours' => '01',
-            'minutes' => '00'
-    
-        ];
-
-    }
-
-   return $output;
 }
 
 /**
@@ -86,12 +79,8 @@ function decorate_time ($input) {
 
     $time = get_time_left ($input);
 
-    $hours = $time['hours'];
-    $minutes = $time['minutes'];
 
-   
-
-    return $output = $hours . ':' . $minutes;
+    return $time['hours'] . ':' . $time['minutes'];
 }
 
 ?>

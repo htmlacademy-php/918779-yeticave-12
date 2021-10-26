@@ -18,7 +18,7 @@ $lots = [
         'category' => 'Доски и лыжи',
         'price' => 10999,
         'path' => 'img/lot-1.jpg',
-        'expiration' => '2021-10-26 21:17'
+        'expiration' => '2021-10-27 04:49'
     ],
 
     [
