@@ -5,7 +5,7 @@
             <!--заполните этот список из массива категорий-->
             <?php foreach ($categories as $category_title):?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html"><?=htmlspecialchars($category_title);?>></a>
+                <a class="promo__link" href="pages/all-lots.html"><?=htmlspecialchars($category_title);?></a>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -27,10 +27,11 @@
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost"><?=decoratePrice(htmlspecialchars($lots_val['price']));?></span>
+                            <span class="lot__cost"><?=format_price($lots_val['price']);?></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+                        <?php $warningDate = get_time_left($lots_val['expiration']);?>
+                        <div class="lot__timer timer <?=($warningDate['hours'] < 1) ? 'timer--finishing' : '';?>">
+                            <?=decorate_time($lots_val['expiration']);?>
                         </div>
                     </div>
                 </div>
