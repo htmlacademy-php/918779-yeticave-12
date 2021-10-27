@@ -1,7 +1,8 @@
 <?php
 
 define('HOUR', '3600');
-define('MINUTE', '60');
+define('MINUTES_PER_HOUR', '60');
+define('SECONDS_PER_MINUTE', '60');
 
 $is_auth = rand(0, 1);
 
@@ -18,7 +19,7 @@ $lots = [
         'category' => 'Доски и лыжи',
         'price' => 10999,
         'path' => 'img/lot-1.jpg',
-        'expiration' => '2021-10-27 04:49'
+        'expiration' => '2021-10-28 04:49'
     ],
 
     [

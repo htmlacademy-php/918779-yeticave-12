@@ -44,12 +44,12 @@ function get_time_left ($input) {
     $hours = floor($diff / HOUR);
 
     $expiration = $diff - ($hours * HOUR);
-    $minutes = ceil($expiration / MINUTE);
+    $minutes = ceil($expiration / SECONDS_PER_MINUTE);
 
-    if ($minutes == MINUTE)  {
+    if ($minutes == MINUTES_PER_HOUR)  {
 
         $hours = $hours + 1;
-        $minutes = $minutes - $minutes;
+        $minutes = 0;
     
     }
     
@@ -64,7 +64,7 @@ function get_time_left ($input) {
     ];
 
     return $output;
-    
+
 }
 
 /**
