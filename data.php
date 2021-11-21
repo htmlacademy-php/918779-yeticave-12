@@ -10,58 +10,37 @@ $user_name = 'Антон';
 
 $title = 'Главная';
 
-$categories = [ 'Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
+if(!$link) {
 
-$lots = [
+    http_response_code(500);
+    header('Location: /error.php',true, 500);
+    exit;
+}
 
-    [
-        'title' => '2014 Rossignol District Snowboard',
-        'category' => 'Доски и лыжи',
-        'price' => 10999,
-        'path' => 'img/lot-1.jpg',
-        'expiration' => '2021-10-28 04:49'
-    ],
+else {
 
-    [
-        'title' => 'DC Ply Mens 2016/2017 Snowboard',
-        'category' => 'Доски и лыжи',
-        'price' => 159999,
-        'path' => 'img/lot-2.jpg',
-        'expiration' => '2021-11-01'
-    ],
+    // Запрос на получение списка категорий
+    $categories_list = "SELECT categories.id, categories.code, categories.title FROM categories ORDER BY id ASC";
 
-    [
-        'title' => 'Крепления Union Contact Pro 2015 года размер L/XL',
-        'category' => 'Крепления',
-        'price' => 	8000,
-        'path' => 'img/lot-3.jpg',
-        'expiration' => '2021-10-28'
-    ],
+    //Выполняем запрос и получаем результат
+    $result = mysqli_query($link, $categories_list);
 
-    [
-        'title' => 'Ботинки для сноуборда DC Mutiny Charocal',
-        'category' => 'Ботинки',
-        'price' => 10999,
-        'path' => 'img/lot-4.jpg',
-        'expiration' => '2021-10-29'
-    ],
+    // Запрос выполнен успешно
+    if ($result) {
 
-    [
-        'title' => 'Куртка для сноуборда DC Mutiny Charocal',
-        'category' => 'Одежда',
-        'price' => 7500,
-        'path' => 'img/lot-5.jpg',
-        'expiration' => '2021-10-31'
-    ],
+        // Получаем все категории в виде двухмерного массива
+        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    [
-        'title' => 'Маска Oakley Canopy',
-        'category' => 'Разное',
-        'price' => 5400,
-        'path' => 'img/lot-6.jpg',
-        'expiration' => '2021-10-30'
-    ]
+    } else {
 
-];
+        // Получить текст последней ошибки
+
+        http_response_code(404);
+        $content = header('Location: /error.php',true, 404);
+        exit;
+
+    }
+
+}
 
 ?>
