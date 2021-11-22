@@ -15,7 +15,7 @@ message TEXT
 
 CREATE TABLE categories (
 id INT AUTO_INCREMENT PRIMARY KEY,
-name VARCHAR(128) NOT NULL UNIQUE,
+title VARCHAR(128) NOT NULL UNIQUE,
 code VARCHAR(128) NOT NULL UNIQUE
 );
 
@@ -45,5 +45,3 @@ lot_id INT,
 FOREIGN KEY (user_id) REFERENCES users(id),
 FOREIGN KEY (lot_id) REFERENCES lots(id)
 );
-
-CREATE FULLTEXT INDEX yeticave_search ON lots(title, description);
