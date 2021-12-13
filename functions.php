@@ -114,6 +114,14 @@ function is_number_valid ($num) {
 
 };
 
+/**
+* 'Проверяет дату завершения лота'
+*
+* @param $date дата в формате ГГГГ-ММ-ДД
+*
+* @return 'Если дата больше текущей менее чем на один день или содержимое поля «дата завершения» не является датой в формате «ГГГГ-ММ-ДД» возвращает соответствующее сообщение'
+*/
+
 function valid_date ($date) {
     if (is_date_valid($date)) {
 
@@ -132,5 +140,59 @@ function valid_date ($date) {
     }
 };
 
+
+/**
+* 'Проверяет корректность e-mail'
+*
+* @param $email электронная почта
+*
+* @return 'Возвращает сообщение, что e-mail должен быть корректным'
+*/
+
+function is_email_valid ($email) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "E-mail должен быть корректным";
+    }
+};
+
+/**
+* 'Проверяет длину строки'
+*
+* @param $value строка
+* @param $min минимальное количество символов в строке
+* @param $max максимальное количество символов в строке
+*
+* @return 'Возвращает сообщение, о необходимом количестве символов в строке'
+*/
+
+function is_length_valid ($value, $min, $max) {
+    if ($value) {
+        $len = strlen($value);
+        if ($len < $min or $len > $max) {
+            return "Значение должно быть от $min до $max символов";
+        }
+    }
+};
+
+/**
+* 'Проверяет наличие введенного e-mail в базе данных'
+*
+* @param $link cоединение
+* @param $sql запрос
+* @param $data данные
+*
+* @return 'Возвращает данные из базы данных'
+*/
+
+function is_email_used ($link, $sql, $data) {
+
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_bind_result($stmt, $res);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+
+    return $res;
+};
 
 ?>
