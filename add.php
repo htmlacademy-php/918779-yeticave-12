@@ -11,6 +11,31 @@ if ($categories) {
     $categories_id = array_column($categories, "id");
 }
 
+if (!$is_auth) {
+
+    http_response_code(403);
+
+    $main_content = include_template("main-error.php", [
+
+        'categories' => $categories,
+        'is_auth' => $is_auth
+
+    ]);
+
+    $layout_content = include_template("layout.php", [
+
+        "content" => $main_content,
+        "categories" => $categories,
+        "title" => "Доступ запрещен",
+        "is_auth" => $is_auth,
+        "user_name" => $user_name
+
+    ]);
+
+    print($layout_content);
+    exit;
+}
+
 $main_content = include_template("main-add.php", ["categories" => $categories]);
 
 if($_SERVER["REQUEST_METHOD"] === 'POST') {

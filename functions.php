@@ -195,4 +195,25 @@ function is_email_used ($link, $sql, $data) {
     return $res;
 };
 
+/**
+* 'Проверяет правильность введенного логина и пароля'
+*
+* @param $link cоединение
+* @param $data данные
+*
+* @return 'Возвращает данные из базы данных'
+*/
+
+function is_login_data_correct ($link, $data) {
+
+    $sql = "SELECT  id, email, name, password FROM users WHERE email = ?";
+
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
+
+    return $res;
+};
+
 ?>
