@@ -16,7 +16,7 @@ $main_content = include_template('main-login.php', [
     "categories" => $categories
 ]);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $required = ["email", "password"];
     $errors = [];
@@ -69,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if (!count($errors) and $user_data) {
                 if (password_verify($user_info["password"], $user_data["password"])) {
-                    $issession = session_start();
                     $_SESSION['user'] = $user_data['name'];
                     $_SESSION['id'] = $user_data['id'];
                 }

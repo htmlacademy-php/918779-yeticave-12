@@ -1,5 +1,6 @@
         <section class="lot-item container">
-            <?php if (http_response_code(403)): ?>
+
+            <?php if ($error == 403): ?>
             <h2>403 Доступ запрещен</h2>
             <p>У вас нет прав доступа к данному разделу сайта.</p>
 
