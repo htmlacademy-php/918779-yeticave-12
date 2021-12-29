@@ -4,9 +4,15 @@ define('HOUR', '3600');
 define('MINUTES_PER_HOUR', '60');
 define('SECONDS_PER_MINUTE', '60');
 
-$is_auth = rand(0, 1);
+$user_name = "";
 
-$user_name = 'Антон';
+$is_auth = !empty($_SESSION["user"]);
+
+if ($is_auth) {
+    $user_name = $_SESSION["user"];
+};
+
+date_default_timezone_set('Europe/Moscow');
 
 $title = 'Главная';
 

@@ -11,6 +11,13 @@ if ($categories) {
     $categories_id = array_column($categories, "id");
 }
 
+if (!$is_auth) {
+
+    header('Location: error.php?error=403');
+
+    exit;
+}
+
 $main_content = include_template("main-add.php", ["categories" => $categories]);
 
 if($_SERVER["REQUEST_METHOD"] === 'POST') {
