@@ -1,6 +1,7 @@
+DROP DATABASE IF EXISTS yeticave;
+
 CREATE DATABASE yeticave
-	DEFAULT CHARACTER SET utf8
-	DEFAULT COLLATE utf8_general_ci;
+	DEFAULT CHARACTER SET utf8;
 
 USE yeticave;
 
@@ -33,7 +34,8 @@ winner_id INT,
 category_id INT,
 FOREIGN KEY (user_id) REFERENCES users(id),
 FOREIGN KEY (winner_id) REFERENCES users(id),
-FOREIGN KEY (category_id) REFERENCES categories(id)
+FOREIGN KEY (category_id) REFERENCES categories(id),
+FULLTEXT (title, description)
 );
 
 CREATE TABLE bets (
