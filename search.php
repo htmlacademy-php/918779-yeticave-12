@@ -13,8 +13,7 @@ if ($search) {
 
     $current_page = (int) ($_GET["page"] ?? 1);
 
-    $page_items = 9;
-    $offset = ($current_page - 1) * $page_items;
+    $offset = ($current_page - 1) * PAGE_ITEMS;
 
     $sql = "SELECT COUNT(*) as count FROM lots WHERE MATCH(lots.title, lots.description) AGAINST(?)";
 
@@ -23,18 +22,19 @@ if ($search) {
     $result= mysqli_stmt_get_result($stmt);
 
     $items_count = mysqli_fetch_assoc($result)['count'];
-    $pages_count = ceil($items_count / $page_items);
+    $pages_count = ceil($items_count / PAGE_ITEMS);
 
     if($current_page === 0 || $current_page > $pages_count) {
 
         header("Location: /index.php");
+        exit;
     }
 
     $pages = range(1, $pages_count);
 
     $sql = "SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category FROM lots
     JOIN categories ON lots.category_id=categories.id
-    WHERE MATCH(lots.title, lots.description) AGAINST(?) ORDER BY expiration DESC LIMIT " . $page_items . " OFFSET " . $offset;
+    WHERE MATCH(lots.title, lots.description) AGAINST(?) ORDER BY expiration DESC LIMIT " . PAGE_ITEMS . " OFFSET " . $offset;
 
     $stmt = db_get_prepare_stmt($link, $sql, [$search]);
     mysqli_stmt_execute($stmt);

@@ -3,6 +3,7 @@
 define('HOUR', '3600');
 define('MINUTES_PER_HOUR', '60');
 define('SECONDS_PER_MINUTE', '60');
+define('PAGE_ITEMS', '9');
 
 $user_name = "";
 
