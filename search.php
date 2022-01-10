@@ -7,7 +7,7 @@ require_once('functions.php');
 
 $lots = [];
 
-$search = trim($_GET['search']) ?? '';
+$search = trim($_GET['search'] ?? '');
 
 if ($search) {
 
