@@ -28,9 +28,9 @@
             <div class="timer timer--win">Ставка выиграла</div>
           <?php else: ?>
           <?php $time = get_time_left($bet["expiration"]) ?>
-            <div class="timer <?php if ($time[0] < 1 && $time[0] != 0): ?>timer--finishing <?php elseif($time[0] == 0): ?>timer--end<?php endif; ?>">
-              <?php if ($time[0] != 0): ?>
-              <?= "$time[0] : $time[1]"; ?>
+            <div class="timer <?php if ($time["hours"] < 1 && $time["hours"] != 0): ?>timer--finishing <?php elseif($time["hours"] == 0): ?>timer--end<?php endif; ?>">
+              <?php if ($time["hours"] != 0): ?>
+              <?= "$time[hours] : $time[minutes]"; ?>
               <?php else: ?>
                 Торги окончены
               <?php endif; ?>
@@ -38,10 +38,10 @@
             <?php endif; ?>
           </td>
           <td class="rates__price">
-          <?=format_price($bet["bet"]);?>
+          <?=format_price($bet["cost"]);?>
           </td>
           <td class="rates__time">
-          <?= $bet["date"]; ?>
+          <?= $bet["date_bet"]; ?>
           </td>
         </tr>
         <?php endforeach; ?>
