@@ -13,18 +13,22 @@
       <?php if (!empty($bets)): ?>
       <table class="rates__list">
       <?php foreach($bets as $bet): ?>
-        <tr class="rates__item <?php if ($bet["winner_id"] === $_SESSION["id"]): ?>rates__item--win<?php endif; ?>">
+        <?php $winner_verify = $bet["winner_id"] === $_SESSION["id"]; ?>
+        <tr class="rates__item <?php if ($winner_verify): ?>rates__item--win<?php endif; ?>">
           <td class="rates__info">
             <div class="rates__img">
+                <img src="<?= $bet["path"]; ?>" width="54" height="40" alt="<?= $bet["title"]; ?>">
             </div>
-            <h3 class="rates__title"><a href="lot.php?id=<?= $bet["id"]; ?>"><?= $bet["title"]; ?></a></h3>
-            <p><?php if ($bet["winner_id"] === $_SESSION["id"]): ?><?= $bet["user_data"] ?><?php endif; ?></p>
+            <div>
+                <h3 class="rates__title"><a href="lot.php?id=<?= $bet["id"]; ?>"><?= $bet["title"]; ?></a></h3>
+                <p><?php if ($winner_verify): ?><?= $bet["message"] ?><?php endif; ?></p>
+            </div>
           </td>
           <td class="rates__category">
-          <?= $bet["title"]; ?>
+          <?= $bet["category"]; ?>
           </td>
           <td class="rates__timer">
-          <?php if ($bet["winner_id"] === $_SESSION["id"]): ?>
+          <?php if ($winner_verify): ?>
             <div class="timer timer--win">Ставка выиграла</div>
           <?php else: ?>
           <?php $time = get_time_left($bet["expiration"]) ?>
@@ -40,8 +44,9 @@
           <td class="rates__price">
           <?=format_price($bet["cost"]);?>
           </td>
+          <?php $bet_time = get_time_after_end($bet["date_bet"]); ?>
           <td class="rates__time">
-          <?= $bet["date_bet"]; ?>
+          <?= $bet_time; ?>
           </td>
         </tr>
         <?php endforeach; ?>

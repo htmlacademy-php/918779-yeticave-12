@@ -35,10 +35,25 @@ if (!mysqli_num_rows($res)) {
 
 $lot = mysqli_fetch_array($res, MYSQLI_ASSOC);
 
-$history = is_get_bets_history($link, $id_num);
+$sql = "SELECT users.name, bets.cost, date_bet AS date_bet
+        FROM bets
+        JOIN lots ON bets.lot_id=lots.id
+        JOIN users ON bets.user_id=users.id
+        WHERE lots.id = $id_num
+        ORDER BY bets.date_bet DESC LIMIT 10";
+        $result = mysqli_query($link, $sql);
+
+        if ($result) {
+            $history = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
+
+        else {
+        $error = mysqli_error($link);
+        }
+
 $current_price = max($lot["price"], $history[0]["cost"]);
 $min_bet = $current_price + $lot["step"];
-$bet_counter = is_bet_counter ($link, $id_num);
+$bet_counter = get_bet_count($link, $id_num);
 
 
 $main_content = include_template('main-lot.php', [
@@ -64,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Ставка не может быть меньше $min_bet";
     }
     if (empty($bet)) {
-        $error = "Ставка должна быть целым числом, болше ноля";
+        $error = "Ставка должна быть целым числом, болше нуля";
     }
 
     if ($error) {
@@ -79,11 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "history" => $history
         ]);
     } else {
-        $res = is_add_bet_db($link, $bet, $_SESSION["id"], $id_num);
-        $bet_counter = is_bet_counter ($link, $id_num);
+        $res = add_bet_db($link, $bet, $_SESSION["id"], $id_num);
+        $bet_counter = get_bet_count($link, $id_num);
         header("Location: /lot.php?id=" .$id_num);
     }
-} 
+}
 
 $layout_content = include_template('layout.php', [
 

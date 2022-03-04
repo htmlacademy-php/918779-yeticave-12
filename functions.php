@@ -26,6 +26,12 @@ function format_price ($input) {
     return $output;
 }
 
+/**
+ * Возвращает массив из результата запроса
+ * @param $result_query Результат запроса к базе данных
+ * @return array Возвращает массив
+ */
+
 function get_arrow ($result_query) {
     $row = mysqli_num_rows($result_query);
     if ($row === 1) {
@@ -75,8 +81,56 @@ function get_time_left ($input) {
     ];
 
     return $output;
-
 }
+
+/**
+ * 'Определяет время прошедшее с окончания лота'
+ *
+ * @param $input Время окочания лота
+ *
+ * @return @output Время прошедшее с окончания лота или время окончания лота
+ */
+
+function get_time_after_end ($input) {
+
+    $date01 = date_create($input);
+    $date02 = date_create("now");
+    $interval = date_diff($date01, $date02);
+
+    $format_diff = date_interval_format($interval, "%d %H %I");
+    $arr = explode(" ", $format_diff);
+
+    $days = $arr[0];
+    $hours = $arr[0] * 24 + $arr[1];
+    $minutes = intval($arr[2]);
+
+    $time = [
+
+        'days' => $days,
+        'hours' => $hours,
+        'minutes' => $minutes
+
+    ];
+
+    switch ($time['days']) {
+        case 0:
+            switch ($time['hours']) {
+                case 0:
+                    return $time['minutes'] . get_noun_plural_form($time['minutes'],' минута', ' минуты', ' минут') . ' назад';
+                    break;
+                default:
+                    return $time['hours'] . get_noun_plural_form($time['hours'],' час ', ' часа ', ' часов ') . $time['minutes'] . get_noun_plural_form($time['minutes'],' минута', ' минуты', ' минут') . ' назад';
+            }
+            break;
+        case 1:
+            return 'Вчера, ' . $date_format = date_format($date01, 'H:i');
+            break;
+        default:
+            return $date_format = date_format($date01, 'd.m.y') . ' в ' . $date_format = date_format($date01, 'H:i');
+    }
+
+};
+
 
 /**
  * 'Форматирует время, оставшееся до конца лота'
@@ -190,7 +244,7 @@ function is_length_valid ($value, $min, $max) {
 *
 * @param $link cоединение
 * @param $sql запрос
-* @param $data данные
+* @param $data электронная почта
 *
 * @return 'Возвращает данные из базы данных'
 */
@@ -210,9 +264,9 @@ function is_email_used ($link, $sql, $data) {
 * 'Проверяет правильность введенного логина и пароля'
 *
 * @param $link cоединение
-* @param $data данные
+* @param $data логин и пароль
 *
-* @return 'Возвращает данные из базы данных'
+* @return 'Возвращает данные из БД о существовании в ней указанных логина и пароля'
 */
 
 function is_login_data_correct ($link, $data) {
@@ -227,80 +281,18 @@ function is_login_data_correct ($link, $data) {
     return $res;
 };
 
-
 /**
-* 'Проверяет ставку'
+* 'Добавляет в БД данные сделанной ставки'
 *
 * @param $link cоединение
-* @param $data данные
+* @param $cost Сумма ставки
+* @param $user_id id пользователя
+* @param $lot_id id лота
 *
-* @return 'Возвращает данные из базы данных'
+* @return 'Возвращает переданные в БД данные или ошибку, если нет соединения с БД'
 */
 
-function is_get_bets ($link, $data) {
-
-    if (!$link) {
-
-    $error = mysqli_connect_error();
-    return $error;
-
-    } else {
-
-        $sql = "SELECT DATE_FORMAT(bets.date_bet, '%d.%m.%y %H:%i') AS date_bet, bets.cost, lots.title, lots.description, lots.path, lots.expiration, lots.id, lots.winner_id, categories.title, users.message
-        FROM bets
-        JOIN lots ON bets.lot_id = lots.id
-        JOIN users ON bets.user_id = users.id
-        JOIN categories ON lots.category_id = categories.id
-        WHERE bets.user_id = $data
-        ORDER BY bets.date_bet DESC;";
-        $result = mysqli_query($link, $sql);
-
-        if ($result) {
-
-            $bets_list = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            return $bets_list;
-        }
-
-        $error = mysqli_error($link);
-        return $error;
-
-    }
-};
-
-/**
-* 'Проверяет данные'
-*
-* @param $link cоединение
-* @param $data данные
-*
-* @return 'Возвращает данные из базы данных'
-*/
-
-
-function is_get_user_data ($link, $data) {
-
-    if (!$link) {
-    $error = mysqli_connect_error();
-    return $error;
-
-    } else {
-
-        $sql = "SELECT  users.message AS user_data FROM lots
-        JOIN users ON users.id = lots.user_id
-        WHERE lots.id = $data";
-
-        $result = mysqli_query($link, $sql);
-
-        if ($result) {
-            $contacts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        }
-
-        $error = mysqli_error($link);
-        return $error;
-    }
-};
-
-function is_add_bet_db($link, $cost, $user_id, $lot_id) {
+function add_bet_db($link, $cost, $user_id, $lot_id) {
     $sql = "INSERT INTO bets (cost, user_id, lot_id) VALUE (?, ?, ?)";
     $stmt = db_get_prepare_stmt($link, $sql, [$cost, $user_id, $lot_id]);
     $result = mysqli_stmt_execute($stmt);
@@ -311,28 +303,15 @@ function is_add_bet_db($link, $cost, $user_id, $lot_id) {
     return $error;
 };
 
-function is_get_bets_history ($link, $data) {
-    if (!$link) {
-    $error = mysqli_connect_error();
-    return $error;
-    } else {
-        $sql = "SELECT users.name, bets.cost, DATE_FORMAT(date_bet, '%d.%m.%y %H:%i') AS date_bet
-        FROM bets
-        JOIN lots ON bets.lot_id=lots.id
-        JOIN users ON bets.user_id=users.id
-        WHERE lots.id = $data
-        ORDER BY bets.date_bet DESC LIMIT 10;";
-        $result = mysqli_query($link, $sql);
-        if ($result) {
-            $list_bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            return $list_bets;
-        }
-        $error = mysqli_error($link);
-        return $error;
-    }
-};
+/**
+* 'Возвращает количество сделанных ставок'
+*
+* @param $link cоединение
+* @param $data id лота
+* @return 'Возвращает количество ставок по лоту'
+*/
 
-function is_bet_counter($link, $data) {
+function get_bet_count($link, $data) {
 
     $result = mysqli_query($link, "SELECT COUNT(*) as cnt FROM bets
     JOIN lots ON bets.lot_id=lots.id
