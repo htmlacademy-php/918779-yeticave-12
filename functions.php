@@ -116,21 +116,19 @@ function get_time_after_end ($input) {
         case 0:
             switch ($time['hours']) {
                 case 0:
-                    return $time['minutes'] . get_noun_plural_form($time['minutes'],' минута', ' минуты', ' минут') . ' назад';
+                    return sprintf('%d %s назад', $time['minutes'], get_noun_plural_form($time['minutes'],'минута', 'минуты', 'минут'));
                     break;
                 default:
-                    return $time['hours'] . get_noun_plural_form($time['hours'],' час ', ' часа ', ' часов ') . $time['minutes'] . get_noun_plural_form($time['minutes'],' минута', ' минуты', ' минут') . ' назад';
+                    return sprintf('%d %s %d %s назад', $time['hours'], get_noun_plural_form($time['hours'],'час', 'часа', 'часов'), $time['minutes'], get_noun_plural_form($time['minutes'],'минута', 'минуты', 'минут'));
             }
-            break;
         case 1:
-            return 'Вчера, ' . $date_format = date_format($date01, 'H:i');
+            return sprintf('Вчера, %s', date_format($date01, 'H:i'));
             break;
         default:
-            return $date_format = date_format($date01, 'd.m.y') . ' в ' . $date_format = date_format($date01, 'H:i');
+            return sprintf('%s в %s', date_format($date01, 'd.m.y'), date_format($date01, 'H:i'));
     }
 
 };
-
 
 /**
  * 'Форматирует время, оставшееся до конца лота'

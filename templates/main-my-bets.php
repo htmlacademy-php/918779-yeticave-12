@@ -31,10 +31,10 @@
           <?php if ($winner_verify): ?>
             <div class="timer timer--win">Ставка выиграла</div>
           <?php else: ?>
-          <?php $time = get_time_left($bet["expiration"]) ?>
-            <div class="timer <?php if ($time["hours"] < 1 && $time["hours"] != 0): ?>timer--finishing <?php elseif($time["hours"] == 0): ?>timer--end<?php endif; ?>">
-              <?php if ($time["hours"] != 0): ?>
-              <?= "$time[hours] : $time[minutes]"; ?>
+          <?php $time = get_time_left($bet["expiration"]); ?>
+            <div class="timer <?php if ($time["hours"] < 1 && $time["hours"] !== 0): ?>timer--finishing <?php elseif($time["hours"] === 0): ?>timer--end<?php endif; ?>">
+              <?php if ($time["hours"] !== 0): ?>
+                <?= sprintf('%d:%d', $time["hours"], $time["minutes"]); ?>
               <?php else: ?>
                 Торги окончены
               <?php endif; ?>
