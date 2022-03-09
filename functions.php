@@ -27,6 +27,23 @@ function format_price ($input) {
 }
 
 /**
+ * Возвращает массив из результата запроса
+ * @param $result_query Результат запроса к базе данных
+ * @return array Возвращает массив
+ */
+
+function get_arrow ($result_query) {
+    $row = mysqli_num_rows($result_query);
+    if ($row === 1) {
+        $arrow = mysqli_fetch_assoc($result_query);
+    } else if ($row > 1) {
+        $arrow = mysqli_fetch_all($result_query, MYSQLI_ASSOC);
+    }
+
+    return $arrow;
+};
+
+/**
  * 'Определяет время оставшееся до окончания лота'
  *
  * @param $input Дата в виде строки
@@ -64,8 +81,54 @@ function get_time_left ($input) {
     ];
 
     return $output;
-
 }
+
+/**
+ * 'Определяет время прошедшее с окончания лота'
+ *
+ * @param $input Время окочания лота
+ *
+ * @return @output Время прошедшее с окончания лота или время окончания лота
+ */
+
+function get_time_after_end ($input) {
+
+    $date01 = date_create($input);
+    $date02 = date_create("now");
+    $interval = date_diff($date01, $date02);
+
+    $format_diff = date_interval_format($interval, "%d %H %I");
+    $arr = explode(" ", $format_diff);
+
+    $days = $arr[0];
+    $hours = $arr[0] * 24 + $arr[1];
+    $minutes = intval($arr[2]);
+
+    $time = [
+
+        'days' => $days,
+        'hours' => $hours,
+        'minutes' => $minutes
+
+    ];
+
+    switch ($time['days']) {
+        case 0:
+            switch ($time['hours']) {
+                case 0:
+                    return sprintf('%d %s назад', $time['minutes'], get_noun_plural_form($time['minutes'],'минута', 'минуты', 'минут'));
+                    break;
+                default:
+                    return sprintf('%d %s %d %s назад', $time['hours'], get_noun_plural_form($time['hours'],'час', 'часа', 'часов'), $time['minutes'], get_noun_plural_form($time['minutes'],'минута', 'минуты', 'минут'));
+            }
+        case 1:
+            return sprintf('Вчера, %s', date_format($date01, 'H:i'));
+            break;
+        default:
+            return sprintf('%s в %s', date_format($date01, 'd.m.y'), date_format($date01, 'H:i'));
+    }
+
+};
 
 /**
  * 'Форматирует время, оставшееся до конца лота'
@@ -179,7 +242,7 @@ function is_length_valid ($value, $min, $max) {
 *
 * @param $link cоединение
 * @param $sql запрос
-* @param $data данные
+* @param $data электронная почта
 *
 * @return 'Возвращает данные из базы данных'
 */
@@ -199,9 +262,9 @@ function is_email_used ($link, $sql, $data) {
 * 'Проверяет правильность введенного логина и пароля'
 *
 * @param $link cоединение
-* @param $data данные
+* @param $data логин и пароль
 *
-* @return 'Возвращает данные из базы данных'
+* @return 'Возвращает данные из БД о существовании в ней указанных логина и пароля'
 */
 
 function is_login_data_correct ($link, $data) {
@@ -214,6 +277,137 @@ function is_login_data_correct ($link, $data) {
     mysqli_stmt_close($stmt);
 
     return $res;
+};
+
+/**
+* 'Добавляет в БД данные сделанной ставки'
+*
+* @param $link cоединение
+* @param $cost Сумма ставки
+* @param $user_id id пользователя
+* @param $lot_id id лота
+*
+* @return 'Возвращает переданные в БД данные или ошибку, если нет соединения с БД'
+*/
+
+function add_bet_db($link, $cost, $user_id, $lot_id) {
+    $sql = "INSERT INTO bets (cost, user_id, lot_id) VALUE (?, ?, ?)";
+    $stmt = db_get_prepare_stmt($link, $sql, [$cost, $user_id, $lot_id]);
+    $result = mysqli_stmt_execute($stmt);
+    if ($result) {
+        return $result;
+    }
+    $error = mysqli_error($link);
+    return $error;
+};
+
+/**
+* 'Возвращает количество сделанных ставок'
+*
+* @param $link cоединение
+* @param $data id лота
+* @return 'Возвращает количество ставок по лоту'
+*/
+
+function get_bet_count($link, $data) {
+
+    $result = mysqli_query($link, "SELECT COUNT(*) as cnt FROM bets
+    JOIN lots ON bets.lot_id=lots.id
+    WHERE lots.id = $data");
+    $bets_count = mysqli_fetch_assoc($result)['cnt'];
+
+    if ($result) {
+        return $bets_count;
+    }
+    $error = mysqli_error($link);
+    return $error;
+
+};
+
+function get_lot_date_finish ($link) {
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT * FROM lots WHERE winner_id IS NULL && expiration <= NOW()";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            return $lots;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
+};
+
+function get_last_bet ($link, $id) {
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT * FROM bets
+        WHERE lot_id = $id
+        ORDER BY date DESC LIMIT 1;";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $bet = get_arrow($result);
+            return $bet;
+        }
+        $error = mysqli_error($con);
+        return $error;
+    }
+};
+
+function add_winner ($link, $winer_id, $lot_id) {
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "UPDATE lots SET winner_id = $winer_id WHERE id = $lot_id";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            return $result;
+        }
+            $error = mysqli_error($link);
+            return $error;
+    }
+};
+
+function get_user_win ($link, $id) {
+    if (!$link) {
+    $error = mysqli_connect_error();
+    return $error;
+    } else {
+        $sql = "SELECT lots.id, lots.title, users.name, users.message
+        FROM bets
+        JOIN lots ON bets.lot_id=lots.id
+        JOIN users ON bets.user_id=users.id
+        WHERE lots.id = $id";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $data = get_arrow($result);
+            return $data;
+        }
+        $error = mysqli_error($con);
+        return $error;
+    }
+};
+
+function get_user_contacts ($link, $id) {
+    if (!$link) {
+    $error = mysqli_connect_error();
+    return $error;
+    } else {
+        $sql = "SELECT users.name, users.email, users.message FROM users
+        WHERE id=$id";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $user_date = get_arrow($result);
+            return $user_date;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
 };
 
 ?>

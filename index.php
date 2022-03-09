@@ -6,7 +6,7 @@ require_once('helpers.php');
 require_once('functions.php');
 
 //Запрос на показ лотов
-$sql = 'SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category, MAX(bets.bet) as current_price
+$sql = 'SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category, MAX(bets.cost) as current_price
 FROM lots JOIN categories ON lots.category_id=categories.id
 JOIN bets ON bets.lot_id=lots.id
 WHERE lots.expiration > NOW()
