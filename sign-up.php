@@ -63,11 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = mysqli_connect_error();
             }
 
-
             $sql = "SELECT id FROM users WHERE email = ?";
+            $stmt = db_get_prepare_stmt($link, $sql, [$user['email']]);
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            mysqli_stmt_close($stmt);
 
-            if (is_email_used($link, $sql, [$user["email"]])) {
-            $errors["email"] = 'Пользователь с этим email уже зарегистрирован';
+            if (mysqli_num_rows($res) > 0)  {
+
+                $errors["email"] = 'Пользователь с этим email уже зарегистрирован';
             }
 
         if (count($errors)) {
@@ -76,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "user" => $user,
                 "errors" => $errors
             ]);
+
         } else {
 
             $password = password_hash($user["password"], PASSWORD_DEFAULT);

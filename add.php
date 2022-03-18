@@ -91,7 +91,7 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
             "errors" => $errors
          ]);
     } else {
-        $sql = "INSERT INTO lots (title, category_id, description, price, step, expiration, user_id, path) VALUES (?, ?, ?, ?, ?, ?, 1, ?)";
+        $sql = "INSERT INTO lots (title, category_id, description, price, step, expiration, user_id, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = db_get_prepare_stmt($link, $sql, $lot);
         $res = mysqli_stmt_execute($stmt);
 

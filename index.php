@@ -4,6 +4,7 @@ require_once('init.php');
 require_once('data.php');
 require_once('helpers.php');
 require_once('functions.php');
+require_once("getwinner.php");
 
 //Запрос на показ лотов
 $sql = 'SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category, MAX(bets.cost) as current_price
