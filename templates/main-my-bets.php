@@ -13,7 +13,7 @@
       <?php if (!empty($bets)): ?>
       <table class="rates__list">
       <?php foreach($bets as $bet): ?>
-        <?php $winner_verify = $bet["winner_id"] === $_SESSION["id"]; ?>
+        <?php $winner_verify = $bet["winner_id"] === $_SESSION["id"];?>
         <tr class="rates__item <?php if ($winner_verify): ?>rates__item--win<?php endif; ?>">
           <td class="rates__info">
             <div class="rates__img">
@@ -28,18 +28,16 @@
           <?= $bet["category"]; ?>
           </td>
           <td class="rates__timer">
-          <?php if ($winner_verify): ?>
-            <div class="timer timer--win">Ставка выиграла</div>
+          <?php $time = get_time_left($bet["expiration"]);?>
+          <?php if ($time['hours'] > 0 || $time['hours'] == 0 && $time['minutes'] > 0): ?>
+          <div class="timer <?=($time['hours'] < 1) ? 'timer--finishing' : '';?>"><?= sprintf("%02d:%02d", $time['hours'], $time['minutes']); ?></div>
           <?php else: ?>
-          <?php $time = get_time_left($bet["expiration"]); ?>
-            <div class="timer <?php if ($time["hours"] < 1 && $time["hours"] !== 0): ?>timer--finishing <?php elseif($time["hours"] === 0): ?>timer--end<?php endif; ?>">
-              <?php if ($time["hours"] !== 0): ?>
-                <?= sprintf('%d:%d', $time["hours"], $time["minutes"]); ?>
-              <?php else: ?>
-                Торги окончены
-              <?php endif; ?>
-            </div>
-            <?php endif; ?>
+                <?php if ($winner_verify): ?>
+                <div class="timer timer--win">Ставка выиграла</div>
+                <?php else: ?>
+                <div class="timer timer--end">Торги окончены</div>
+                <?php endif; ?>
+          <?php endif; ?>
           </td>
           <td class="rates__price">
           <?=format_price($bet["cost"]);?>

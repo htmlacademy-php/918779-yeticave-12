@@ -1,0 +1,14 @@
+{
+    "name": "antonromanov/yeticave",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Romanov",
+            "email": "609990@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/mailer": "^6.0"
+    }
+}
