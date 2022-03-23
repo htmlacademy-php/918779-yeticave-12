@@ -233,4 +233,26 @@ function get_bet_count($link, $data) {
     $error = mysqli_error($link);
     return $error;
 };
+
+/**
+* Валидация формы
+* * @param $array Массив с полученными из формы данными
+* @return 'Возвращает ошибки в форме'
+*/
+function form_validate($array, $required) {
+    $errors = [];
+
+    foreach ($array as $field => $value) {
+        if (isset($rules[$field])) {
+            $rule = $rules[$field];
+            $errors[$field] = $rule($value);
+        }
+        if (in_array($field, $required) && empty($value)) {
+            $errors[$field] = "Данное поле необходимо заполнить";
+        }
+    }
+
+    return $errors = array_filter($errors);
+};
+
 ?>

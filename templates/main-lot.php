@@ -18,7 +18,6 @@
           <p class="lot-item__description"><?=$lot['description']; ?></p>
         </div>
         <div class="lot-item__right">
-        <?php if ($is_auth): ?>
           <div class="lot-item__state">
             <?php $warningDate = get_time_left($lot['expiration']);?>
             <div class="lot-item__timer timer <?=($warningDate['hours'] < 1) ? 'timer--finishing' : '';?>">
@@ -33,6 +32,7 @@
               Мин. ставка <span><?=format_price(htmlspecialchars($min_bet));?></span>
               </div>
             </div>
+            <?php if ($is_auth && array_sum($warningDate) > 0 && (int) $lot['user_id'] !== $_SESSION['id'] && $current_user !== $_SESSION['id']): ?>
             <form class="lot-item__form" action="lot.php?id=<?= $id_num;?>" method="post" autocomplete="off">
               <p class="lot-item__form-item form__item <?php if ($error): ?>form__item--invalid<?php endif; ?>">
                 <label for="cost">Ваша ставка</label>
@@ -41,8 +41,8 @@
               </p>
               <button type="submit" class="button">Сделать ставку</button>
             </form>
+            <?php endif; ?>
           </div>
-        <?php endif; ?>
         <?php if (!empty($history)): ?>
           <div class="history">
             <h3>История ставок (<span><?= $bet_counter;?></span>)</h3>
@@ -53,7 +53,7 @@
                 <td class="history__price"><?=format_price(htmlspecialchars($bet['cost']));?></td>
                 <td class="history__time"><?= $bet["cost"]; ?></td>
               </tr>
-              <?php endforeach; ?>            
+              <?php endforeach; ?>
             </table>
             <?php endif; ?>
           </div>

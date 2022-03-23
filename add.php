@@ -6,6 +6,7 @@ require_once('helpers.php');
 require_once('functions.php');
 
 $categories_id = [];
+$user_id = $_SESSION['id'];
 
 if ($categories) {
     $categories_id = array_column($categories, "id");
@@ -23,7 +24,6 @@ $main_content = include_template("main-add.php", ["categories" => $categories]);
 if($_SERVER["REQUEST_METHOD"] === 'POST') {
 
     $required = ["title", "category_id", "description", "price", "step", "expiration"];
-    $errors = [];
 
     $rules = [
         "category_id" => function($value) use ($categories_id) {
@@ -50,21 +50,11 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         "expiration" => FILTER_DEFAULT
     ], true);
 
-    foreach ($lot as $field => $value) {
-        if (isset($rules[$field])) {
-            $rule = $rules[$field];
-            $errors[$field] = $rule($value);
-        }
-        if (in_array($field, $required) && empty($value)) {
-            $errors[$field] = "Это поле необходимо заполнить";
-        }
-    }
+    $errors = form_validate($lot, $required);
 
-    $errors = array_filter($errors);
-
-    if (!empty($_FILES["path"]["name"])) {
-        $tmp_name = $_FILES["path"]["tmp_name"];
-        $path = $_FILES["[path]"]["name"];
+    if (!empty($_FILES["photo"]["name"])) {
+        $tmp_name = $_FILES["photo"]["tmp_name"];
+        $path = $_FILES["photo"]["name"];
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $file_type = finfo_file($finfo, $tmp_name);
@@ -76,12 +66,12 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         if ($ext) {
             $filename = uniqid() . $ext;
             $lot["path"] = "uploads/". $filename;
-            move_uploaded_file($_FILES["path"]["tmp_name"], "uploads/". $filename);
+            move_uploaded_file($_FILES["photo"]["tmp_name"], "uploads/". $filename);
         } else {
-            $errors["path"] = "Допустимые форматы файлов: jpg, jpeg, png";
+            $errors["photo"] = "Допустимые форматы файлов: jpg, jpeg, png";
         }
     } else {
-        $errors["path"] = "Вы не загрузили изображение";
+        $errors["photo"] = "Вы не загрузили изображение";
     }
 
     if (count($errors)) {
@@ -91,7 +81,7 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
             "errors" => $errors
          ]);
     } else {
-        $sql = "INSERT INTO lots (title, category_id, description, price, step, expiration, user_id, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO lots (title, category_id, description, price, step, expiration, path, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, $user_id)";
         $stmt = db_get_prepare_stmt($link, $sql, $lot);
         $res = mysqli_stmt_execute($stmt);
 
