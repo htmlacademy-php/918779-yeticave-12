@@ -12,7 +12,6 @@ $search = trim($_GET['search'] ?? '');
 if ($search) {
 
     $current_page = (int) ($_GET["page"] ?? 1);
-
     $offset = ($current_page - 1) * PAGE_ITEMS;
 
     $sql = "SELECT COUNT(*) as count FROM lots WHERE MATCH(lots.title, lots.description) AGAINST(?)";
@@ -25,7 +24,6 @@ if ($search) {
     $pages_count = ceil($items_count / PAGE_ITEMS);
 
     if($current_page === 0 || $current_page > $pages_count) {
-
         header("Location: /index.php");
         exit;
     }
@@ -41,11 +39,8 @@ if ($search) {
     $result= mysqli_stmt_get_result($stmt);
 
     if ($result) {
-
-            $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
+        $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
-
 }
 
 $main_content = include_template("main-search.php", [
@@ -67,5 +62,4 @@ $layout_content = include_template("layout.php", [
 ]);
 
 print($layout_content);
-
 ?>

@@ -23,7 +23,7 @@ foreach($lots as $lot) {
     $id = (int)$lot['id'];
 
     $sql = "SELECT * FROM bets WHERE lot_id = $id
-        ORDER BY date_bet DESC LIMIT 1;";
+            ORDER BY date_bet DESC LIMIT 1;";
 
     $result = mysqli_query($link, $sql);
 
@@ -87,7 +87,5 @@ if (!empty($bets_win)) {
     // Отправка сообщения
     $mailer = new Mailer($transport);
     $mailer->send($message);
-
 }
-
 ?>

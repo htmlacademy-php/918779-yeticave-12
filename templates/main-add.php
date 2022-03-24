@@ -36,15 +36,15 @@
         <textarea id="message" name="description" placeholder="Напишите описание лота"></textarea>
         <span class="form__error"><?= $errors["description"]; ?></span>
       </div>
-      <?php $classname = isset($errors["path"]) ? "form__item--invalid" : ""; ?>
+      <?php $classname = isset($errors["photo"]) ? "form__item--invalid" : ""; ?>
       <div class="form__item form__item--file <?= $classname; ?>">
         <label>Изображение <sup>*</sup></label>
         <div class="form__input-file">
-          <input class="visually-hidden" type="file" name="path" id="lot-img" value="">
+          <input class="visually-hidden" type="file" name="photo" id="lot-img" value="">
           <label for="lot-img">
             Добавить
           </label>
-        <span class="form__error"><?= $errors["path"]; ?></span>
+        <span class="form__error"><?= $errors["photo"]; ?></span>
         </div>
       </div>
       <div class="form__container-three">

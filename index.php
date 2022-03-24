@@ -7,11 +7,10 @@ require_once('functions.php');
 require_once("getwinner.php");
 
 //Запрос на показ лотов
-$sql = 'SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category, MAX(bets.cost) as current_price
-FROM lots JOIN categories ON lots.category_id=categories.id
-JOIN bets ON bets.lot_id=lots.id
+$sql = "SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category FROM lots
+JOIN categories ON lots.category_id=categories.id
 WHERE lots.expiration > NOW()
-GROUP BY lots.id';
+ORDER BY creation DESC";
 
 $res = mysqli_query($link, $sql);
 
@@ -38,5 +37,4 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print($layout_content);
-
 ?>

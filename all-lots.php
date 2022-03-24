@@ -52,10 +52,9 @@ if ($category_id) {
     if ($result) {
         $current_category = mysqli_fetch_assoc($result)['category_name'];
     }
-
 };
 
-    $title = "Лоты в категории" . " " . $current_category;
+$title = "Лоты в категории" . " " . $current_category;
 
 $main_content = include_template("main-all-lots.php", [
     "categories" => $categories,
@@ -74,7 +73,5 @@ $layout_content = include_template("layout.php", [
     "user_name" => $user_name
 ]);
 
-
 print($layout_content);
-
 ?>
