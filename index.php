@@ -14,14 +14,13 @@ ORDER BY creation DESC";
 
 $res = mysqli_query($link, $sql);
 
-if ($res) {
-    $lots = mysqli_fetch_all($res, MYSQLI_ASSOC);
-
-} else {
+if (!$res) {
     http_response_code(404);
     header('Location: /error.php',true, 404);
     exit;
 }
+
+$lots = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
 $main_content = include_template('main.php', [
     'categories' => $categories,

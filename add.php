@@ -85,14 +85,13 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         $stmt = db_get_prepare_stmt($link, $sql, $lot);
         $res = mysqli_stmt_execute($stmt);
 
-        if ($res) {
-            $lot_id = mysqli_insert_id($link);
-            header("Location: /lot.php?id=" . $lot_id);
-
-        } else {
+        if (!$res) {
             header("Location: /error.php", true, 500);
             exit;
         }
+
+        $lot_id = mysqli_insert_id($link);
+        header("Location: /lot.php?id=" . $lot_id);
     }
 
 };
