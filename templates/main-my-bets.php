@@ -14,8 +14,13 @@
       <table class="rates__list">
       <?php foreach($bets as $bet): ?>
         <?php $winner_verify = $bet["winner_id"] === $_SESSION["id"];?>
-        <tr class="rates__item <?php if ($winner_verify): ?>rates__item--win<?php endif; ?>">
-          <td class="rates__info">
+        <?php $time = get_time_left($bet["expiration"]);?>
+        <?php if ($winner_verify): ?>
+        <tr class="rates__item rates__item--win">
+        <?php else: ?>
+        <tr class="rates__item <?= (array_sum($time) <= 0) ? 'rates__item--end': '';?>">
+        <?php endif; ?>
+         <td class="rates__info">
             <div class="rates__img">
                 <img src="<?= $bet["path"]; ?>" width="54" height="40" alt="<?= $bet["title"]; ?>">
             </div>
@@ -28,7 +33,6 @@
           <?= $bet["category"]; ?>
           </td>
           <td class="rates__timer">
-          <?php $time = get_time_left($bet["expiration"]);?>
           <?php if ($time['hours'] > 0 || $time['hours'] == 0 && $time['minutes'] > 0): ?>
           <div class="timer <?=($time['hours'] < 1) ? 'timer--finishing' : '';?>"><?= sprintf("%02d:%02d", $time['hours'], $time['minutes']); ?></div>
           <?php else: ?>
