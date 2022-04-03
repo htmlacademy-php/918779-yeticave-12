@@ -48,10 +48,11 @@
             <h3>История ставок (<span><?= $bet_counter;?></span>)</h3>
             <table class="history__list">
               <?php foreach($history as $bet): ?>
+              <?php $bet_time = get_time_after_end($bet["date_bet"]); ?>
               <tr class="history__item">
                 <td class="history__name"><?= $bet["name"]; ?></td>
                 <td class="history__price"><?=format_price(htmlspecialchars($bet['cost']));?></td>
-                <td class="history__time"><?= $bet["cost"]; ?></td>
+                <td class="history__time"><?=htmlspecialchars($bet_time); ?></td>
               </tr>
               <?php endforeach; ?>
             </table>

@@ -27,7 +27,7 @@ function format_price ($input) {
  */
 function get_arrow ($result_query) {
     $row = mysqli_num_rows($result_query);
-    if ($row === 1) {
+    if ($row === 0 || $row === 1) {
         $arrow = mysqli_fetch_assoc($result_query);
     } else if ($row > 1) {
         $arrow = mysqli_fetch_all($result_query, MYSQLI_ASSOC);

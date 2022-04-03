@@ -23,17 +23,16 @@ foreach($lots as $lot) {
     $id = (int)$lot['id'];
 
     $sql = "SELECT * FROM bets WHERE lot_id = $id
-            ORDER BY date_bet DESC LIMIT 1;";
+            ORDER BY date_bet DESC LIMIT 1";
 
     $result = mysqli_query($link, $sql);
 
     if ($result) {
-            $bet = get_arrow($result);
+        $bet = get_arrow($result);
     }
 
-    $winner_id = $bet["user_id"];
-
     if (!empty($bet)) {
+        $winner_id = $bet["user_id"];
         $id_lot = $lot["id"];
         $bets_win[] = $bet;
         $sql = "UPDATE lots SET winner_id = $winner_id WHERE id = $id";
@@ -47,45 +46,32 @@ if (!empty($bets_win)) {
 
     foreach($bets_win as $bet) {
         $id = intval($bet["lot_id"]);
+        $recipient_id = intval($bet["user_id"]);
 
-        $sql = "SELECT lots.id, lots.title, users.name, users.message FROM bets
-        JOIN lots ON bets.lot_id=lots.id
-        JOIN users ON bets.user_id=users.id
-        WHERE lots.id = $id";
+        $sql = "SELECT lots.id, lots.title, users.name, users.message, users.email FROM bets
+        JOIN lots ON bets.lot_id = lots.id
+        JOIN users ON bets.user_id = users.id
+        WHERE lots.id = $id && users.id = $recipient_id";
 
         $result = mysqli_query($link, $sql);
         if ($result) {
-            $data = get_arrow($result);
-        }
-        $win_users[] = $data;
-    }
-
-    $recipients = [];
-
-    foreach($bets_win as $bet) {
-        $id = intval($bet["user_id"]);
-
-        $sql = "SELECT users.name, users.email, users.message FROM users WHERE id = $id";
-        $result = mysqli_query($link, $sql);
-
-        if ($result) {
-            $user_data = get_arrow($result);
+            $win_users = get_arrow($result);
         }
 
-        $recipients[$user_data["email"]] = $user_data["name"];
-    }
+        $msg_content = include_template('email.php', ['win_users' => $win_users]);
 
-    // Конфигурация траспорта
-    $dsn = 'smtp://4234:32434@smtp.mailtrap.io:2525?encryption=tls&auth_mode=login';
-    $transport = Transport::fromDsn($dsn);
-    // Формирование сообщения
-    $message = new Email();
-    $message->to($recipients);
-    $message->from("mail@yeticave.shop");
-    $message->subject("Ваша ставка победила");
-    $message->text($msg_content);
-    // Отправка сообщения
-    $mailer = new Mailer($transport);
-    $mailer->send($message);
+        // Конфигурация траспорта
+        $dsn = 'smtp://d753198b29c4db:59e88ca28b5e22@smtp.mailtrap.io:2525?encryption=tls&auth_mode=login';
+        $transport = Transport::fromDsn($dsn);
+        // Формирование сообщения
+        $message = new Email();
+        $message->to($win_users['email']);
+        $message->from("keks@phpdemo.ru");
+        $message->subject("Ваша ставка победила");
+        $message->html($msg_content);
+        // Отправка сообщения
+        $mailer = new Mailer($transport);
+        $mailer->send($message);
+    }
 }
 ?>
