@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         "expiration" => FILTER_DEFAULT
     ], true);
 
-    $errors = form_validate($lot, $required);
+    $errors = form_validate($lot, $rules, $required);
 
     if (!empty($_FILES["photo"]["name"])) {
         $tmp_name = $_FILES["photo"]["tmp_name"];

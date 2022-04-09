@@ -131,6 +131,7 @@ function is_category_valid ($id, $allowed_list) {
 * @return 'Если содержимое не является целым числом, которое больше нуля возвращает сообщение, что Содержимое поля должно быть целым числом больше нуля'
 */
 function is_number_valid ($num) {
+
     if (empty($num) || !ctype_digit($num) || $num < 0) {
         return 'Содержимое поля должно быть целым числом больше нуля';
     }
@@ -236,23 +237,25 @@ function get_bet_count($link, $data) {
 
 /**
 * Валидация формы
-* * @param $array Массив с полученными из формы данными
+* @param $array Массив с полученными из формы данными
 * @return 'Возвращает ошибки в форме'
 */
-function form_validate($array, $required) {
+function form_validate($array, $rules, $required) {
     $errors = [];
-
+    
     foreach ($array as $field => $value) {
         if (isset($rules[$field])) {
             $rule = $rules[$field];
             $errors[$field] = $rule($value);
         }
         if (in_array($field, $required) && empty($value)) {
-            $errors[$field] = "Данное поле необходимо заполнить";
+            $errors[$field] = "Поле $field нужно заполнить";
         }
     }
 
-    return $errors = array_filter($errors);
+    $errors = array_filter($errors);
+
+    return $errors;
 };
 
 ?>
