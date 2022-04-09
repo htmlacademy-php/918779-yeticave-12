@@ -8,7 +8,7 @@ require_once("getwinner.php");
 
 //Запрос на показ лотов
 $sql = "SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category FROM lots
-JOIN categories ON lots.category_id=categories.id
+JOIN categories ON lots.category_id = categories.id
 WHERE lots.expiration > NOW()
 ORDER BY creation DESC";
 

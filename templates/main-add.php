@@ -1,8 +1,8 @@
     <nav class="nav">
       <ul class="nav__list container">
-      <?php foreach ($categories as $categories_val): ?>
+      <?php foreach ($categories as $categories_list): ?>
         <li class="nav__item">
-          <a href="all-lots.html"><?= $categories_val['title']; ?></a>
+        <a href="all-lots.php?category_id=<?= $categories_list['id']; ?>"><?= htmlspecialchars($categories_list['title']); ?></a>
         </li>
       <?php endforeach; ?>
       </ul>
@@ -23,8 +23,8 @@
           <label for="category">Категория <sup>*</sup></label>
           <select id="category" name="category_id">
             <option>Выберите категорию</option>
-            <?php foreach ($categories as $categories_val): ?>
-            <option value="<?= $categories_val["id"]; ?>"><?= $categories_val['title']; ?></option>
+            <?php foreach ($categories as $categories_list): ?>
+            <option value="<?= $categories_list["id"]; ?>"><?= $categories_list['title']; ?></option>
             <?php endforeach; ?>
           </select>
           <span class="form__error"><?= $errors["category_id"]; ?></span>

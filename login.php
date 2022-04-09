@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "password"=>FILTER_SANITIZE_SPECIAL_CHARS
     ], true);
 
-    $errors = form_validate($user_info, $required);
+    $errors = form_validate($user_info, $rules, $required);
 
     if (count($errors)) {
         $main_content = include_template("main-login.php", [

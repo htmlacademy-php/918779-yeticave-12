@@ -2,7 +2,7 @@
       <ul class="nav__list container">
         <?php foreach ($categories as $categories_list):?>
         <li class="nav__item">
-        <a href="all-lots.php?category_id=<?= $categories_list['id']; ?>"><?= $categories_list['title']; ?></a>
+        <a href="all-lots.php?category_id=<?= $categories_list['id']; ?>"><?= htmlspecialchars($categories_list['title']); ?></a>
         </li>
         <?php endforeach; ?>
       </ul>
@@ -15,7 +15,7 @@
             <img src="<?=$lot['path']; ?>" width="730" height="548" alt="<?= $lot['title']; ?>">
           </div>
           <p class="lot-item__category">Категория: <span><?= $lot['category']; ?></span></p>
-          <p class="lot-item__description"><?=$lot['description']; ?></p>
+          <p class="lot-item__description"><?=htmlspecialchars($lot['description']); ?></p>
         </div>
         <div class="lot-item__right">
           <div class="lot-item__state">

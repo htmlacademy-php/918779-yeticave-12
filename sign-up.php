@@ -37,8 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "message"=>FILTER_SANITIZE_SPECIAL_CHARS
     ], true);
 
-   $errors = form_validate($user, $required);
-
+    $errors = form_validate($user, $rules, $required);
 
     if (count($errors)) {
         $main_content = include_template("main-sign-up.php", [

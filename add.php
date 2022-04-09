@@ -5,18 +5,18 @@ require_once('data.php');
 require_once('helpers.php');
 require_once('functions.php');
 
-$categories_id = [];
-$user_id = $_SESSION['id'];
-
-if ($categories) {
-    $categories_id = array_column($categories, "id");
-}
-
 if (!$is_auth) {
 
     header('Location: error.php?error=403');
 
     exit;
+}
+
+$categories_id = [];
+$user_id = $_SESSION['id'];
+
+if ($categories) {
+    $categories_id = array_column($categories, "id");
 }
 
 $main_content = include_template("main-add.php", ["categories" => $categories]);
@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         "expiration" => FILTER_DEFAULT
     ], true);
 
-    $errors = form_validate($lot, $required);
+    $errors = form_validate($lot, $rules, $required);
 
     if (!empty($_FILES["photo"]["name"])) {
         $tmp_name = $_FILES["photo"]["tmp_name"];
