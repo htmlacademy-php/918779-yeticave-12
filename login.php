@@ -15,20 +15,30 @@ $main_content = include_template('main-login.php', [
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $required = ["email", "password"];
 
     $rules = [
-        "email" => function($value) {
+        "email" => function ($value) {
             return is_email_valid($value);
+        },
+
+        "email" => function ($value) {
+            return is_len_valid($value, 256);
+        },
+
+        "password" => function ($value) {
+            return is_len_valid($value, 128);
         }
     ];
 
-    $user_info = filter_input_array(INPUT_POST,
-    [
-        "email"=>FILTER_SANITIZE_SPECIAL_CHARS,
-        "password"=>FILTER_SANITIZE_SPECIAL_CHARS
-    ], true);
+    $user_info = filter_input_array(
+        INPUT_POST,
+        [
+        "email" => FILTER_SANITIZE_SPECIAL_CHARS,
+        "password" => FILTER_SANITIZE_SPECIAL_CHARS
+        ],
+        true
+    );
 
     $errors = form_validate($user_info, $rules, $required);
 
@@ -53,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $errors["password"] = 'Вы ввели неверный пароль';
             }
-
         } else {
             $errors["email"] = 'Такой пользователь не найден';
         }
@@ -88,4 +97,3 @@ $layout_content = include_template("layout.php", [
 ]);
 
 print($layout_content);
-?>

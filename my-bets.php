@@ -6,11 +6,11 @@ require_once('helpers.php');
 require_once('functions.php');
 
 if ($is_auth) {
-
     $data = $_SESSION["id"];
     $bets_list;
 
-    $sql = "SELECT bets.date_bet AS date_bet, bets.cost, lots.title as title, lots.description, lots.path, lots.expiration, lots.id, lots.winner_id, categories.title as category, users.message
+    $sql = "SELECT bets.date_bet AS date_bet, bets.cost, lots.title as title, lots.description,
+    lots.path, lots.expiration, lots.id, lots.winner_id, categories.title as category, users.message
     FROM bets
     JOIN lots ON bets.lot_id = lots.id
     JOIN users ON bets.user_id = users.id
@@ -25,16 +25,13 @@ if ($is_auth) {
 
     if ($result) {
         $bets_list = $result;
-    }
-
-    else {
+    } else {
         $error = mysqli_error($link);
     };
 
     $bets = [];
 
-    foreach($bets_list as $bet) {
-
+    foreach ($bets_list as $bet) {
         $id = intval($bet["id"]);
 
         $sql = "SELECT users.message FROM lots
@@ -45,15 +42,12 @@ if ($is_auth) {
 
         if ($result) {
             $contacts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        }
-
-        else {
+        } else {
             $error = mysqli_error($link);
         }
 
         $res = array_merge($bet, $contacts);
         $bets[] = $res;
-
     };
     unset($bet);
 };
@@ -73,4 +67,3 @@ $layout_content = include_template("layout.php", [
 ]);
 
 print($layout_content);
-?>

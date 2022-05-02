@@ -6,9 +6,7 @@ require_once('helpers.php');
 require_once('functions.php');
 
 if (!$is_auth) {
-
     header('Location: error.php?error=403');
-
     exit;
 }
 
@@ -21,34 +19,54 @@ if ($categories) {
 
 $main_content = include_template("main-add.php", ["categories" => $categories]);
 
-if($_SERVER["REQUEST_METHOD"] === 'POST') {
-
+if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $required = ["title", "category_id", "description", "price", "step", "expiration"];
-
     $rules = [
-        "category_id" => function($value) use ($categories_id) {
+        "category_id" => function ($value) use ($categories_id) {
             return is_category_valid($value, $categories_id);
         },
-        "price" => function($value) {
-            return is_number_valid ($value);
+
+        "category_id" => function ($value) {
+            return is_len_valid($value, 1000000);
         },
-        "step" => function($value) {
-            return is_number_valid ($value);
+
+        "price" => function ($value) {
+            return is_number_valid($value);
         },
-        "date_expiration" => function($value) {
-            return valid_date ($value);
+
+        "price" => function ($value) {
+            return is_len_valid($value, 1000000);
+        },
+
+        "step" => function ($value) {
+            return is_number_valid($value);
+        },
+
+        "step" => function ($value) {
+            return is_len_valid($value, 1000000);
+        },
+
+        "expiration" => function ($value) {
+            return is_len_valid($value, 18);
+        },
+
+        "expiration" => function ($value) {
+            return date_valid($value);
         }
     ];
 
-    $lot = filter_input_array(INPUT_POST,
-    [
+    $lot = filter_input_array(
+        INPUT_POST,
+        [
         "title" => FILTER_DEFAULT,
         "category_id" => FILTER_DEFAULT,
         "description" => FILTER_DEFAULT,
         "price" => FILTER_DEFAULT,
         "step" => FILTER_DEFAULT,
         "expiration" => FILTER_DEFAULT
-    ], true);
+        ],
+        true
+    );
 
     $errors = form_validate($lot, $rules, $required);
 
@@ -60,13 +78,13 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         $file_type = finfo_file($finfo, $tmp_name);
         if ($file_type === "image/jpeg") {
             $ext = ".jpg";
-        } else if ($file_type === "image/png") {
+        } elseif ($file_type === "image/png") {
             $ext = ".png";
         };
         if ($ext) {
             $filename = uniqid() . $ext;
-            $lot["path"] = "uploads/". $filename;
-            move_uploaded_file($_FILES["photo"]["tmp_name"], "uploads/". $filename);
+            $lot["path"] = "uploads/" . $filename;
+            move_uploaded_file($_FILES["photo"]["tmp_name"], "uploads/" . $filename);
         } else {
             $errors["photo"] = "Допустимые форматы файлов: jpg, jpeg, png";
         }
@@ -81,7 +99,8 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
             "errors" => $errors
          ]);
     } else {
-        $sql = "INSERT INTO lots (title, category_id, description, price, step, expiration, path, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, $user_id)";
+        $sql = "INSERT INTO lots (title, category_id, description, price, step, expiration, path, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, $user_id)";
         $stmt = db_get_prepare_stmt($link, $sql, $lot);
         $res = mysqli_stmt_execute($stmt);
 
@@ -93,7 +112,6 @@ if($_SERVER["REQUEST_METHOD"] === 'POST') {
         $lot_id = mysqli_insert_id($link);
         header("Location: /lot.php?id=" . $lot_id);
     }
-
 };
 
 $layout_content = include_template("layout.php", [
@@ -102,9 +120,6 @@ $layout_content = include_template("layout.php", [
     "categories" => $categories,
     "title" => "Добавляет лот",
     "user_name" => $user_name
-    ]
-);
+    ]);
 
 print($layout_content);
-
-?>

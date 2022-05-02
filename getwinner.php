@@ -19,7 +19,7 @@ if ($result) {
 
 $bets_win = [];
 
-foreach($lots as $lot) {
+foreach ($lots as $lot) {
     $id = (int)$lot['id'];
 
     $sql = "SELECT * FROM bets WHERE lot_id = $id
@@ -41,10 +41,9 @@ foreach($lots as $lot) {
 }
 
 if (!empty($bets_win)) {
-
     $win_users = [];
 
-    foreach($bets_win as $bet) {
+    foreach ($bets_win as $bet) {
         $id = intval($bet["lot_id"]);
         $recipient_id = intval($bet["user_id"]);
 
@@ -74,4 +73,3 @@ if (!empty($bets_win)) {
         $mailer->send($message);
     }
 }
-?>

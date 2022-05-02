@@ -14,28 +14,40 @@ if ($categories) {
 $main_content = include_template("main-sign-up.php", ["categories" => $categories]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $required = ["email", "password", "name", "message"];
 
     $rules = [
-        "email" => function($value) {
+        "email" => function ($value) {
             return is_email_valid($value);
         },
-        "password" => function($value) {
-            return is_length_valid ($value, 6, 8);
+
+        "email" => function ($value) {
+            return is_len_valid($value, 256);
         },
-        "message" => function($value) {
-            return is_length_valid ($value, 12, 1000);
+
+        "name" => function ($value) {
+            return is_len_valid($value, 128);
+        },
+
+        "password" => function ($value) {
+            return is_len_valid($value, 128);
+        },
+
+        "message" => function ($value) {
+            return is_length_valid($value, 12, 1000);
         }
     ];
 
-    $user = filter_input_array(INPUT_POST,
-    [
-        "email"=>FILTER_SANITIZE_SPECIAL_CHARS,
-        "password"=>FILTER_SANITIZE_SPECIAL_CHARS,
-        "name"=>FILTER_SANITIZE_SPECIAL_CHARS,
-        "message"=>FILTER_SANITIZE_SPECIAL_CHARS
-    ], true);
+    $user = filter_input_array(
+        INPUT_POST,
+        [
+        "email" => FILTER_SANITIZE_SPECIAL_CHARS,
+        "password" => FILTER_SANITIZE_SPECIAL_CHARS,
+        "name" => FILTER_SANITIZE_SPECIAL_CHARS,
+        "message" => FILTER_SANITIZE_SPECIAL_CHARS
+        ],
+        true
+    );
 
     $errors = form_validate($user, $rules, $required);
 
@@ -56,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $res = mysqli_stmt_get_result($stmt);
         mysqli_stmt_close($stmt);
 
-        if (mysqli_num_rows($res) > 0)  {
+        if (mysqli_num_rows($res) > 0) {
             $errors["email"] = 'Пользователь с этим email уже зарегистрирован';
         }
 
@@ -92,4 +104,3 @@ $layout_content = include_template("layout.php", [
 ]);
 
 print($layout_content);
-?>
