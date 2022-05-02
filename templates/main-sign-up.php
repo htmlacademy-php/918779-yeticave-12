@@ -1,8 +1,9 @@
     <nav class="nav">
       <ul class="nav__list container">
-      <?php foreach ($categories as $categories_list): ?>
+      <?php foreach ($categories as $categories_list) : ?>
         <li class="nav__item">
-        <a href="all-lots.php?category_id=<?= $categories_list['id']; ?>"><?= htmlspecialchars($categories_list['title']); ?></a>
+        <a href="all-lots.php?category_id=<?= $categories_list['id']; ?>">
+            <?= htmlspecialchars($categories_list['title']); ?></a>
         </li>
       <?php endforeach; ?>
       </ul>
@@ -21,7 +22,8 @@
       <?php $classname = isset($errors["password"]) ? "form__item--invalid" : ""; ?>
       <div class="form__item <?= $classname; ?>">
         <label for="password">Пароль <sup>*</sup></label>
-        <input id="password" type="password" name="password" placeholder="Введите пароль" value="<?=$user['password'] ?? ''; ?>">
+        <input id="password" type="password" name="password" placeholder="Введите пароль"
+            value="<?=$user['password'] ?? ''; ?>">
         <span class="form__error"><?= $errors["password"]; ?></span>
       </div>
       <?php $classname = isset($errors["name"]) ? "form__item--invalid" : ""; ?>
@@ -33,7 +35,9 @@
       <?php $classname = isset($errors["message"]) ? "form__item--invalid" : ""; ?>
       <div class="form__item <?= $classname; ?>">
         <label for="message">Контактные данные <sup>*</sup></label>
-        <textarea id="message" name="message" placeholder="Напишите как с вами связаться"><?=$user['message'] ?? ''; ?></textarea>
+        <textarea id="message" name="message" placeholder="Напишите как с вами связаться">
+            <?=$user['message'] ?? ''; ?>
+        </textarea>
         <span class="form__error"><?= $errors["message"]; ?></span>
       </div>
       <span class="form__error form__error--bottom">Пожалуйста, исправьте ошибки в форме.</span>

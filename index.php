@@ -16,7 +16,7 @@ $res = mysqli_query($link, $sql);
 
 if (!$res) {
     http_response_code(404);
-    header('Location: /error.php',true, 404);
+    header('Location: /error.php', true, 404);
     exit;
 }
 
@@ -36,4 +36,3 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print($layout_content);
-?>

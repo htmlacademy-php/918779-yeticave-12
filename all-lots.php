@@ -23,13 +23,14 @@ if ($category_id) {
     $items_count = mysqli_fetch_assoc($result)['count'];
     $pages_count = ceil($items_count / $page_items);
 
-    if($current_page == 0 || $current_page > $pages_count) {
+    if ($current_page == 0 || $current_page > $pages_count) {
         header("Location: /index.php");
     }
 
     $pages = range(1, $pages_count);
 
-    $sql = "SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category_name FROM lots
+    $sql = "SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category_name
+    FROM lots
     JOIN categories ON lots.category_id=categories.id
     WHERE lots.category_id = ? && lots.expiration > NOW() LIMIT " . $page_items . " OFFSET " . $offset;
 
@@ -74,4 +75,3 @@ $layout_content = include_template("layout.php", [
 ]);
 
 print($layout_content);
-?>
