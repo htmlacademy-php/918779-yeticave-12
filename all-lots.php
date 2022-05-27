@@ -51,7 +51,7 @@ if ($category_id) {
     $result = mysqli_stmt_get_result($stmt);
 
     if ($result) {
-        $current_category = mysqli_fetch_assoc($result)['category_name'];
+        $current_category = mysqli_fetch_assoc($result)['category_name'] ?? "";
     }
 };
 

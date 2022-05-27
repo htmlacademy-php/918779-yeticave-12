@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $required = ["title", "category_id", "description", "price", "step", "expiration"];
     $rules = [
         "category_id" => function ($value) use ($categories_id) {
-            return is_category_valid($value, $categories_id);
+            return is_category_valid($categories_id, $value);
         },
 
         "category_id" => function ($value) {
