@@ -6,6 +6,9 @@ require_once('helpers.php');
 require_once('functions.php');
 
 $page_items = 9;
+$pages_count = 1;
+$pages = 1;
+$current_page = 0;
 
 $lots = [];
 
