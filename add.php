@@ -22,8 +22,13 @@ $main_content = include_template("main-add.php", ["categories" => $categories]);
 if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $required = ["title", "category_id", "description", "price", "step", "expiration"];
     $rules = [
+
+        "category_id" => function ($value) {
+            return is_len_valid($value, 1000000);
+        },
+
         "category_id" => function ($value) use ($categories_id) {
-            return is_category_valid($categories_id, $value);
+            return is_category_valid($value, $categories_id);
         },
 
         "category_id" => function ($value) {
@@ -31,19 +36,19 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         },
 
         "price" => function ($value) {
-            return is_number_valid($value);
+            return is_len_valid($value, 1000000);
         },
 
         "price" => function ($value) {
-            return is_len_valid($value, 1000000);
-        },
-
-        "step" => function ($value) {
             return is_number_valid($value);
         },
 
         "step" => function ($value) {
             return is_len_valid($value, 1000000);
+        },
+
+        "step" => function ($value) {
+            return is_number_valid($value);
         },
 
         "expiration" => function ($value) {

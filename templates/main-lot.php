@@ -3,7 +3,7 @@
         <?php foreach ($categories as $categories_list) :?>
         <li class="nav__item">
         <a href="all-lots.php?category_id=<?= htmlspecialchars($categories_list['id']); ?>">
-            <?= htmlspecialchars($categories_list['title']); ?></a>
+            <?=htmlspecialchars($categories_list['title']); ?></a>
         </li>
         <?php endforeach; ?>
       </ul>
