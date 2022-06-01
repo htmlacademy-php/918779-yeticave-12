@@ -59,13 +59,15 @@
       <?php $classname = isset($errors["price"]) ? "form__item--invalid" : ""; ?>
         <div class="form__item form__item--small <?= $classname; ?>">
           <label for="lot-rate">Начальная цена <sup>*</sup></label>
-          <input id="lot-rate" type="text" name="price" placeholder="0" value="<?=htmlspecialchars($lot["price"] ?? ''); ?>">
+          <input id="lot-rate" type="text" name="price" placeholder="0"
+          value="<?=htmlspecialchars($lot["price"] ?? ''); ?>">
           <span class="form__error"><?= $errors["price"] ?? ''; ?></span>
         </div>
         <?php $classname = isset($errors["step"]) ? "form__item--invalid" : ""; ?>
         <div class="form__item form__item--small <?= $classname; ?>">
           <label for="lot-step">Шаг ставки <sup>*</sup></label>
-          <input id="lot-step" type="text" name="step" placeholder="0" value="<?=htmlspecialchars($lot["step"] ?? ''); ?>">
+          <input id="lot-step" type="text" name="step" placeholder="0"
+          value="<?=htmlspecialchars($lot["step"] ?? ''); ?>">
           <span class="form__error"><?= $errors["step"] ?? ''; ?></span>
         </div>
         <?php $classname = isset($errors["expiration"]) ? "form__item--invalid" : ""; ?>

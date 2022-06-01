@@ -18,19 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $rules = [
         "email" => function ($value) {
-            return is_email_valid($value);
-        },
-
-        "email" => function ($value) {
-            return is_len_valid($value, 256);
+            return is_email_valid($value, 256);
         },
 
         "name" => function ($value) {
-            return is_len_valid($value, 128);
+            return is_length_valid($value, 1, 128);
         },
 
         "password" => function ($value) {
-            return is_len_valid($value, 128);
+            return is_length_valid($value, 1, 128);
         },
 
         "message" => function ($value) {

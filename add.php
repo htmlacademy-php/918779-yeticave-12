@@ -23,40 +23,20 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $required = ["title", "category_id", "description", "price", "step", "expiration"];
     $rules = [
 
-        "category_id" => function ($value) {
-            return is_len_valid($value, 1000000);
-        },
-
         "category_id" => function ($value) use ($categories_id) {
-            return is_category_valid($value, $categories_id);
-        },
-
-        "category_id" => function ($value) {
-            return is_len_valid($value, 1000000);
+            return is_category_valid($value, $categories_id, 1000000);
         },
 
         "price" => function ($value) {
-            return is_len_valid($value, 1000000);
-        },
-
-        "price" => function ($value) {
-            return is_number_valid($value);
+            return is_number_valid($value, 1000000);
         },
 
         "step" => function ($value) {
-            return is_len_valid($value, 1000000);
-        },
-
-        "step" => function ($value) {
-            return is_number_valid($value);
+            return is_number_valid($value, 1000000);
         },
 
         "expiration" => function ($value) {
-            return is_len_valid($value, 18);
-        },
-
-        "expiration" => function ($value) {
-            return date_valid($value);
+            return date_valid($value, 18);
         }
     ];
 

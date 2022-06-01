@@ -20,7 +20,7 @@
                         alt="<?= htmlspecialchars($lot_val["title"]); ?>">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category"><?= htmlspecialchars($lot_val["title"]); ?></span>
+                    <span class="lot__category"><?= htmlspecialchars($lot_val["category_name"]); ?></span>
                     <h3 class="lot__title">
                         <a class="text-link" href="lot.php?id=<?= htmlspecialchars($lot_val["id"]); ?>">
                     <?= htmlspecialchars($lot_val["title"]); ?></a></h3>
@@ -45,23 +45,23 @@
             <?php $next = htmlspecialchars($current_page) + 1; ?>
                 <li class="pagination-item pagination-item-prev">
                     <a <?php if ($current_page >= 2) :
-                        ?> href="all-lots.php?category_id=<?= htmlspecialchars($cat); ?>&page=<?= $prev; ?>"<?php
-                       endif; ?>>Назад</a>
+                        ?> href="all-lots.php?category_id=<?= htmlspecialchars($category_id);?>&page=<?= $prev; ?>"
+                       <?php endif; ?>>Назад</a>
                 </li>
                 <?php foreach ($pages as $page) : ?>
-                <li class="pagination-item <?php if ($page == $current_page) :
-                    ?>pagination-item-active<?php
-                                           endif; ?>">
-                    <a href="all-lots.php?category_id=<?= htmlspecialchars($cat); ?>
-                        &page=<?= htmlspecialchars($page); ?>">
-                            <?= htmlspecialchars($page); ?>
-                    </a>
+                <li class="pagination-item <?php if ($page === $current_page) :
+                    ?>pagination-item-active
+                                           <?php endif;?>">
+                <a href="all-lots.php?category_id=<?=htmlspecialchars($category_id);?>
+                &page=<?= htmlspecialchars($page); ?>">
+                    <?= htmlspecialchars($page); ?>
+                </a>
                 </li>
                 <?php endforeach; ?>
                 <li class="pagination-item pagination-item-next">
                     <a <?php if ($current_page < $pages_count) :
-                        ?> href="all-lots.php?category_id=<?= htmlspecialchars($cat); ?>
-                            &page=<?=htmlspecialchars($next); ?>"<?php
+                        ?> href="all-lots.php?category_id=<?= htmlspecialchars($category_id);
+?>&page=<?=htmlspecialchars($next); ?>"<?php
                        endif; ?>>Вперед</a>
                 </li>
             </ul>
