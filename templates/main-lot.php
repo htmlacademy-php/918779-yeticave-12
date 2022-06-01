@@ -42,12 +42,11 @@
 ) : ?>
             <form class="lot-item__form" action="lot.php?id=<?= htmlspecialchars($id_num);?>"
                 method="post" autocomplete="off">
-              <p class="lot-item__form-item form__item <?php if ($error) :
-                    ?>form__item--invalid
-                                                       <?php endif; ?>">
+                                    <?php $classname = isset($error) ? "form__item--invalid" : ""; ?>
+              <p class="lot-item__form-item form__item <?=$classname; ?>">
                 <label for="cost">Ваша ставка</label>
                 <input id="cost" type="text" name="cost" placeholder="<?=format_price(htmlspecialchars($min_bet));?>">
-                <span class="form__error"><?= $error; ?></span>
+                <span class="form__error"><?= $error ?? ""; ?></span>
               </p>
               <button type="submit" class="button">Сделать ставку</button>
             </form>

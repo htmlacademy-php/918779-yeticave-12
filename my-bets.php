@@ -7,7 +7,6 @@ require_once('functions.php');
 
 if ($is_auth) {
     $data = $_SESSION["id"];
-    $bets_list;
 
     $sql = "SELECT bets.date_bet AS date_bet, bets.cost, lots.title as title, lots.description,
     lots.path, lots.expiration, lots.id, lots.winner_id, categories.title as category, users.message

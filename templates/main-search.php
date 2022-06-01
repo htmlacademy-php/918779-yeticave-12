@@ -11,8 +11,8 @@
 
     <div class="container">
       <section class="lots">
-        <h2>Результаты поиска по запросу «<span><?= htmlspecialchars($search); ?></span>»</h2>
         <?php if (!empty($lots)) : ?>
+        <h2>Результаты поиска по запросу «<span><?= htmlspecialchars($search); ?></span>»</h2>
         <ul class="lots__list">
             <?php foreach ($lots as $lot_val) : ?>
           <li class="lots__item lot">
@@ -69,5 +69,5 @@
             <?php endif; ?>
     </div>
         <?php else : ?>
-        <h2>Ничего не найдено по вашему запросу</h2>
+        <h2>Ничего не найдено по вашему запросу «<span><?= htmlspecialchars($search); ?></span>»</h2>
         <?php endif; ?>

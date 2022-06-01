@@ -16,7 +16,8 @@
       <?php $classname = isset($errors["email"]) ? "form__item--invalid" : ""; ?>
       <div class="form__item <?= $classname; ?>"> <!-- form__item--invalid -->
         <label for="email">E-mail <sup>*</sup></label>
-        <input id="email" type="text" name="email" placeholder="Введите e-mail" value="<?=htmlspecialchars($user["email"] ?? ''); ?>">
+        <input id="email" type="text" name="email" placeholder="Введите e-mail"
+        value="<?=htmlspecialchars($user["email"] ?? ''); ?>">
         <span class="form__error"><?= $errors["email"] ?? ''; ?></span>
       </div>
       <?php $classname = isset($errors["password"]) ? "form__item--invalid" : ""; ?>
@@ -29,7 +30,8 @@
       <?php $classname = isset($errors["name"]) ? "form__item--invalid" : ""; ?>
       <div class="form__item <?= $classname; ?>">
         <label for="name">Имя <sup>*</sup></label>
-        <input id="name" type="text" name="name" placeholder="Введите имя" value="<?=htmlspecialchars($user['name'] ?? ''); ?>">
+        <input id="name" type="text" name="name" placeholder="Введите имя"
+        value="<?=htmlspecialchars($user['name'] ?? ''); ?>">
         <span class="form__error"><?= $errors["name"] ?? ''; ?></span>
       </div>
       <?php $classname = isset($errors["message"]) ? "form__item--invalid" : ""; ?>

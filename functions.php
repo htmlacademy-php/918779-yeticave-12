@@ -132,13 +132,21 @@ function decorate_time($input)
 
 /**
  * Проверяет существование категории
- * @param $id номер категории, $allowed_list  массив с категориями
+ * @param $value номер категории, $categories_id  массив с категориями
  * @return 'Если категории нет, то возвращает сообщение, что Указанной катагории не существует'
  */
-function is_category_valid($id, $allowed_list)
+function is_category_valid($value, $categories_id, $max)
 {
-    if (!in_array($id, $allowed_list)) {
+
+    if (!in_array($value, $categories_id)) {
         return "Указанная категория не существует";
+    }
+
+    if ($value) {
+        $len = strlen($value);
+        if ($len > $max) {
+            return "Ошибка. В номере категории должно быть не более $max символов";
+        }
     }
 }
 
@@ -148,10 +156,17 @@ function is_category_valid($id, $allowed_list)
 * @return 'Если содержимое не является целым числом, которое больше нуля возвращает сообщение,
 * что Содержимое поля должно быть целым числом больше нуля'
 */
-function is_number_valid($num)
+function is_number_valid($num, $max)
 {
     if (empty($num) || !ctype_digit($num) || $num < 0) {
         return 'Содержимое поля должно быть целым числом больше нуля без пробелов';
+    }
+
+    if ($num) {
+        $len = strlen($num);
+        if ($len > $max) {
+            return "Ошибка. В числе должно быть не более $max символов";
+        }
     }
 }
 
@@ -161,8 +176,9 @@ function is_number_valid($num)
 * @return 'Если дата больше текущей менее чем на один день или содержимое поля «дата завершения»
 * не является датой в формате «ГГГГ-ММ-ДД» возвращает соответствующее сообщение'
 */
-function date_valid($date)
+function date_valid($date, $max)
 {
+
     if (!is_date_valid($date)) {
         return "Содержимое поля «дата завершения» должно быть датой в формате «ГГГГ-ММ-ДД»";
     }
@@ -174,6 +190,13 @@ function date_valid($date)
     if ($diff < $seconds_per_day) {
         return "Дата должна быть больше текущей не менее чем на один день";
     }
+
+    if ($date) {
+        $len = strlen($date);
+        if ($len > $max) {
+            return "Ошибка. В дате должно быть не более $max символов";
+        }
+    }
 }
 
 /**
@@ -181,10 +204,17 @@ function date_valid($date)
 * @param $email электронная почта
 * @return 'Возвращает сообщение, что e-mail должен быть корректным'
 */
-function is_email_valid($email)
+function is_email_valid($email, $max)
 {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "E-mail должен быть корректным";
+    }
+
+    if ($email) {
+        $len = strlen($email);
+        if ($len > $max) {
+            return "Ошибка. В адресе почты должно быть не более $max символов";
+        }
     }
 }
 
@@ -201,22 +231,6 @@ function is_length_valid($value, $min, $max)
         $len = strlen($value);
         if ($len < $min or $len > $max) {
             return "Значение должно быть от $min до $max символов";
-        }
-    }
-}
-
-/**
-* Проверяет максимальное количество символов в строке
-* @param $value строка
-* @param $max максимальное количество символов в строке*
-* @return 'Возвращает сообщение, о необходимом количестве символов в строке'
-*/
-function is_len_valid($value, $max)
-{
-    if ($value) {
-        $len = strlen($value);
-        if ($len > $max) {
-            return "Вы ввели $len символов. Максимальное количество символов в поле - $max";
         }
     }
 }

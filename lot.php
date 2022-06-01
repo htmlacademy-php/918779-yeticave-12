@@ -18,11 +18,6 @@ $sql = "SELECT lots.id, lots.title, lots.description, lots.path, lots.price, lot
 $res = mysqli_query($link, $sql);
 
 if (!$res) {
-    header('Location: /error.php', true, 500);
-    exit;
-};
-
-if (!mysqli_num_rows($res)) {
     http_response_code(404);
     header('Location: /error.php', true, 404);
     exit;
@@ -65,25 +60,15 @@ $main_content = include_template('main-lot.php', [
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $required = ["cost"];
-
-    $rules = [
-        "cost" => function ($value) {
-            return is_len_valid($value, 1000000);
-        }
-    ];
-
     $bet = filter_input(INPUT_POST, "cost", FILTER_VALIDATE_INT);
-
-    $errors = form_validate($bet, $rules, $required);
+    $error = "";
 
     if ($bet < $min_bet) {
         $error = "Ставка не может быть меньше $min_bet";
     }
 
     if (empty($bet)) {
-        $error = "Ставка должна быть целым числом, болше нуля";
+        $error = "Ставка должна быть целым числом, больше нуля";
     }
 
     if ($error) {

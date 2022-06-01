@@ -27,11 +27,6 @@ if ($search) {
     $items_count = mysqli_fetch_assoc($result)['count'];
     $pages_count = ceil($items_count / $page_items);
 
-    if ($current_page === 0 || $current_page > $pages_count) {
-        header("Location: /index.php");
-        exit;
-    }
-
     $pages = range(1, $pages_count);
 
     $sql = "SELECT lots.id, lots.title, lots.price, lots.path, lots.expiration, categories.title as category FROM lots
