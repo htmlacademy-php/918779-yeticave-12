@@ -27,6 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             return is_category_valid($value, $categories_id, 1000000);
         },
 
+        "title" => function ($value) {
+            return is_length_valid($value, 1, 128);
+        },
+
+        "description" => function ($value) {
+            return is_length_valid($value, 1, 256);
+        },
+
         "price" => function ($value) {
             return is_number_valid($value, 1000000);
         },

@@ -29,7 +29,7 @@
         <nav class="user-menu">
             <?php if ($is_auth) : ?>
             <div class="user-menu__logged">
-                <p><?= $user_name; ?></p>
+                <p><?=htmlspecialchars($user_name); ?></p>
                 <a class="user-menu__bets" href="my-bets.php">Мои ставки</a>
                 <a class="user-menu__logout" href="logout.php">Выход</a>
             </div>
@@ -47,7 +47,7 @@
     </div>
 </header>
 
-<?php if ($title == 'Главная') : ?>
+<?php if ($title === 'Главная') : ?>
 <main class="container">
 <?php else : ?>
 <main>
